@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    //property
     private bool IsMoving
     {
         set
@@ -14,8 +15,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    [SerializeField] float moveSpeed = 150f;
-    [SerializeField] float maxSpeed = 8f;
+    [SerializeField] float moveSpeed = 50f;
+   // [SerializeField] float maxSpeed = 15f;
+    [SerializeField] private float idleFriction;
     [SerializeField] GameObject swordHitBox;
 
     Rigidbody2D rb2d;
@@ -47,7 +49,15 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove == true && movementInput != Vector2.zero)
         {
-            rb2d.velocity = Vector2.ClampMagnitude(rb2d.velocity + (movementInput * moveSpeed * Time.fixedDeltaTime), maxSpeed);
+                            //rb2d.velocity = Vector2.ClampMagnitude(rb2d.velocity + (movementInput * moveSpeed * Time.fixedDeltaTime), maxSpeed);
+            rb2d.AddForce(movementInput * moveSpeed * Time.fixedDeltaTime);
+
+                            //if(rb2d.velocity.magnitude > maxSpeed) //limits player speed?
+                            //{
+                            //    float limitedSpeed = Mathf.Lerp(rb2d.velocity.magnitude, maxSpeed, idleFriction);
+                            //    rb2d.velocity = rb2d.velocity.normalized * limitedSpeed;
+                            //}
+            
 
             if (movementInput.x < 0)
             {
@@ -64,6 +74,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            rb2d.velocity = Vector2.Lerp(rb2d.velocity, Vector2.zero, idleFriction);
             IsMoving = false;
         }
     }

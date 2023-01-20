@@ -3,61 +3,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : MonoBehaviour, IDamageable
+public class Slime : MonoBehaviour
 {
-    public float Health
-    {
-        set
-        {
-            if (value < health)
-            {
-                animator.SetTrigger("takeDamage");
-            }
-
-            health = value;
-
-
-
-            if(health <= 0)
-            {
-                animator.SetBool("isAlive", false);
-                //Destroy(gameObject);
-            }
-        }
-        
-        get { return health; }
-    }
-
-    Animator animator;
     Rigidbody2D rb2d;
+    DamageableCharacter damageableCharacter;
 
-    private bool isAlive = true;
-    public float health = 3;
+    public float damage = 1;
+    public float knockbackForce = 300f;
+    public float moveSpeed = 15f;
+
+    [SerializeField] DetectionZone detectionZone;
 
     private void Awake()
     {
-        rb2d = GetComponent<Rigidbody2D>();
-
-        animator = GetComponent<Animator>();
-        animator.SetBool("isAlive", true);
+        rb2d= GetComponent<Rigidbody2D>();
+        damageableCharacter = GetComponent<DamageableCharacter>();
     }
 
-    public void Death()
+    private void FixedUpdate()
     {
-        Destroy(gameObject);
+        if (damageableCharacter.Targetable && detectionZone.detectedObjects.Count > 0)
+        {
+            //calculate direction target object.
+            Vector2 direction = (detectionZone.detectedObjects[0].transform.position - transform.position).normalized;
+            //move towards detected object.
+            rb2d.AddForce(direction * moveSpeed * Time.fixedDeltaTime);
+
+        }
     }
 
-    public void OnHit(float damage, Vector2 knockback)
+    private void OnCollisionEnter2D(Collision2D objectCollider)
     {
-        Health -= damage;
+        Collider2D collider2d = objectCollider.collider;
+        IDamageable damageable= objectCollider.collider.GetComponent<IDamageable>();
 
-        //apply force to the slime
-        rb2d.AddForce(knockback);
-        Debug.Log("Force" + knockback);
-    }
-    public void OnHit(float damage)
-    {
-        //Debug.Log("Slime hit " + damage);
-        Health -= damage;
+        if (damageable != null)
+        {
+            //Calculate direction between character and slime
+            //Vector3 parentPosition = transform.parent.position; (this)enemy doesnt need this.
+
+            //Offset for collision detection changes the direction where the force comes from (close to the player)
+            Vector2 direction = (collider2d.transform.position - transform.position).normalized;
+
+            //Knockbak is in direction of enemy towards collider
+            Vector2 knockback = direction * knockbackForce;
+
+            //after making sure the collider has a script that implements IDamageable, we can run the OnHit implementation and pas our Vector2 force
+            damageable.OnHit(damage, knockback);
+        }
     }
 }
