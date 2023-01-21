@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08ae56f3e2459fa4d8f0ceec0ec4bf96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textMesh: {fileID: 7406094665935583594, guid: d09c6079cb7fc07479c43bf0632dc648, type: 3}
   healthText: {fileID: 7406094665935583596, guid: d09c6079cb7fc07479c43bf0632dc648, type: 3}
-  health: 2
-  textToDisplay: 
+  disableSimulation: 0
+  turnInvincible: 0
+  invicibilityTime: 0.25

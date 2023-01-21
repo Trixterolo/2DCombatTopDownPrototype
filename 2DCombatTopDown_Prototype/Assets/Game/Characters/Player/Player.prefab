@@ -294,4 +294,4 @@ MonoBehaviour:
   healthText: {fileID: 7406094665935583596, guid: d09c6079cb7fc07479c43bf0632dc648, type: 3}
   disableSimulation: 1
   turnInvincible: 1
-  invicibilityTime: 2
+  invicibilityTime: 1

@@ -39,7 +39,7 @@ public class HealthText : MonoBehaviour
         //color fading over time
         textMesh.color = new Color(startingColor.r, startingColor.g, startingColor.b, 1 - (timeElapsed / timeToLive));
 
-        //what to display on screen.
+        //what to display on screen. Bad practice because it keeps updating.
         textMesh.SetText(textToDisplay);
 
 

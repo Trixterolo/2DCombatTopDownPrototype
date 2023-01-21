@@ -18,6 +18,9 @@ public class DamageableCharacter : MonoBehaviour, IDamageable
                 //instantiates the healthtext go with script
                 RectTransform textTransform = Instantiate(healthText).GetComponent<RectTransform>();
 
+                //display dmg values based on different object's dmg
+                textTransform.gameObject.GetComponent<HealthText>().textToDisplay = (health - value).ToString();
+
                 //transform worlds space to screen space for the text
                 textTransform.transform.position = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
